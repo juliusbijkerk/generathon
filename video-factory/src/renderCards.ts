@@ -139,7 +139,7 @@ export async function renderIntroCard(displayName: string, date: string, itemCou
   <text x="80" y="${HEIGHT / 2 - 60}" font-family="Helvetica, Arial, sans-serif" font-size="34" fill="#9ca3af">${escapeXml(date)}</text>
   <text x="80" y="${HEIGHT / 2 + 10}" font-family="Helvetica, Arial, sans-serif" font-size="88" font-weight="800" fill="#f9fafb">${escapeXml(displayName)}'s</text>
   <text x="80" y="${HEIGHT / 2 + 110}" font-family="Helvetica, Arial, sans-serif" font-size="88" font-weight="800" fill="#f9fafb">brief</text>
-  <text x="80" y="${HEIGHT / 2 + 190}" font-family="Helvetica, Arial, sans-serif" font-size="36" fill="#6b7280">${itemCount} things worth your time today</text>
+  <text x="80" y="${HEIGHT / 2 + 190}" font-family="Helvetica, Arial, sans-serif" font-size="36" fill="#6b7280">${itemCount} ${itemCount === 1 ? "thing" : "things"} worth your time today</text>
 </svg>`;
   await sharp(Buffer.from(svg)).png().toFile(outPath);
 }

@@ -14,10 +14,11 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createClient } from "@supabase/supabase-js";
 import { generateScript } from "./generateScript.js";
 import { assembleVideo } from "./assemble.js";
 import { checkFfmpegAvailable } from "./ffmpegUtil.js";
-import type { Brief } from "./types.js";
+import type { Brief, BriefItem } from "./types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -27,14 +28,68 @@ async function loadBrief(dryRun: boolean): Promise<Brief> {
     return JSON.parse(raw) as Brief;
   }
 
-  // Live path: fetch the ranked brief for today from Supabase instead of the
-  // fixture. Left as a documented extension point rather than guessed at,
-  // since it depends on a real deployed project (see docs/SETUP.md, step 4).
-  throw new Error(
-    "Live brief loading not wired yet - deploy rank-brief, call it once for today, then " +
-      "either export its response to JSON and point loadBrief() at that file, or add a " +
-      "@supabase/supabase-js fetch here using SUPABASE_URL/SUPABASE_SERVICE_ROLE_KEY.",
-  );
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) {
+    throw new Error("SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY not set - can't load the live brief.");
+  }
+  const profileSlug = process.env.DEFAULT_PROFILE_SLUG ?? "julius";
+  const briefDate =
+    process.argv.find((a) => /^\d{4}-\d{2}-\d{2}$/.test(a)) ?? new Date().toISOString().slice(0, 10);
+
+  const supabase = createClient(url, key);
+
+  const { data: profile, error: profileErr } = await supabase
+    .from("profiles")
+    .select("id, display_name")
+    .eq("slug", profileSlug)
+    .single();
+  if (profileErr || !profile) throw new Error(`Unknown profile "${profileSlug}": ${profileErr?.message}`);
+
+  const { data: brief, error: briefErr } = await supabase
+    .from("briefs")
+    .select("*")
+    .eq("profile_id", profile.id)
+    .eq("brief_date", briefDate)
+    .single();
+  if (briefErr || !brief) {
+    throw new Error(
+      `No ranked brief for ${profileSlug} on ${briefDate} - call rank-brief first. (${briefErr?.message})`,
+    );
+  }
+
+  const { data: briefItemRows } = await supabase
+    .from("brief_items")
+    .select("rank_position, save_id")
+    .eq("brief_id", brief.id)
+    .order("rank_position");
+
+  const items: BriefItem[] = [];
+  for (const row of briefItemRows ?? []) {
+    const { data: save } = await supabase.from("saves").select("*").eq("id", row.save_id).single();
+    const { data: cls } = await supabase
+      .from("save_classifications")
+      .select("*")
+      .eq("save_id", row.save_id)
+      .single();
+    if (!save || !cls) continue;
+    items.push({
+      rank_position: row.rank_position,
+      intent: cls.intent,
+      tags: cls.tags,
+      source_type: save.source_type,
+      source_name: save.source_name ?? save.source_type,
+      source_url: save.source_url ?? "",
+      one_line_insight: cls.one_line_insight,
+    });
+  }
+
+  return {
+    date: briefDate,
+    display_name: profile.display_name,
+    skipped_count: brief.skipped_count ?? 0,
+    items,
+  };
 }
 
 async function main() {
