@@ -1,0 +1,85 @@
+# Content profile: the scoring rubric for what counts as a good item in a
+# daily brief. The scoring engine (supabase/functions/_shared/profile.ts)
+# never changes per user - only this file does. To onboard a second person,
+# copy this file, adjust topics/active_projects/sources, and run
+# `npm run profile:sync -- --slug=<their-slug> --file=content-profile/<name>.yaml`.
+
+slug: julius
+display_name: Julius
+
+locale: [en, nl]
+
+topics:
+  - name: ai-agents
+    weight: 1.0
+  - name: dev-tools
+    weight: 0.9
+  - name: startup-tools
+    weight: 0.9
+  - name: weird-hardware
+    weight: 0.7
+  - name: gtm-growth
+    weight: 0.6
+  - name: fundraising
+    weight: 0.4
+  - name: generic-motivation
+    weight: 0.05
+
+intent_priority:
+  TOOL: 1.0
+  BUILD: 0.9
+  ANCHOR: 0.85
+  MARKET: 0.7
+  DISCOVER: 0.3 # capped by discovery_slots regardless of score
+
+sources:
+  - type: instagram
+    weight: 1.0
+  - type: linkedin
+    weight: 1.0
+  - type: newsletter
+    weight: 1.1
+    known_feeds:
+      - TLDR AI
+      - TLDR Dev
+      - Lenny's Newsletter
+      - Aakash Gupta
+  - type: telegram_forward
+    weight: 1.0
+  - type: manual_paste
+    weight: 1.0
+
+noise_rules:
+  - pattern: engagement bait, no concrete claim or link
+    action: suppress
+  - pattern: vent or complaint with no actionable info and no active_projects match
+    action: suppress
+  - pattern: vent or complaint that matches an active_projects keyword
+    action: keep_as_anchor
+
+# Powers ANCHOR matching: an item whose text hits these keywords is grounding
+# material for a project already being built, not generic noise, even if it
+# reads like a vent (e.g. a "tech job market is broken" post becomes launch-day
+# reply material for job-ai instead of being filtered out).
+active_projects:
+  - name: job-ai
+    keywords:
+      - job search
+      - hiring
+      - ATS
+      - tech layoffs
+      - job market
+    reason: launch-day reply material and market validation
+
+consumption:
+  daily_item_cap: 10
+  video_item_cap: 7
+  discovery_slots: 2
+  min_score_threshold: 0.35
+  tone: direct, second-person, practitioner-level, no hype, name specifics not categories
+  video_style: stack-debrief
+  video_aspect: vertical # 1080x1920, matches AI Shorts / vertical content framing
+
+delivery:
+  channels: [web, email]
+  email_send_time_local: "07:30"

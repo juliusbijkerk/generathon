@@ -1,0 +1,33 @@
+{
+  "name": "foc",
+  "private": true,
+  "version": "0.1.0",
+  "description": "FOC (Future of Content) - a personal daily content debrief: capture, classify, rank, and deliver as video, web, and email.",
+  "workspaces": [
+    "app",
+    "video-factory"
+  ],
+  "scripts": {
+    "video:dry-run": "npm run dry-run --workspace video-factory",
+    "video:live": "npm run live --workspace video-factory",
+    "app:dev": "npm run dev --workspace app",
+    "app:build": "npm run build --workspace app",
+    "profile:sync": "node --import tsx scripts/sync-profile.ts",
+    "seed:newsletters": "node --import tsx scripts/seed-newsletters.ts",
+    "test:capture": "node --import tsx scripts/test-capture.ts",
+    "upload-video": "node --import tsx scripts/upload-video.ts"
+  },
+  "devDependencies": {
+    "js-yaml": "^4.1.0",
+    "tsx": "^4.19.2",
+    "dotenv": "^16.4.7",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.10.2",
+    "@supabase/supabase-js": "^2.47.10"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "sharp@0.33.5": true,
+    "fsevents@2.3.3": true
+  }
+}

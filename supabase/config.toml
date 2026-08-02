@@ -1,0 +1,33 @@
+# Hand-written to match the standard `supabase init` layout (the Supabase CLI
+# was not available in the build environment). If you have the CLI installed
+# locally, `supabase link --project-ref <ref>` will adopt this file as-is.
+
+project_id = "foc"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+
+[functions]
+[functions.ingest-classify]
+verify_jwt = false
+
+[functions.rank-brief]
+verify_jwt = false
+
+[functions.telegram-webhook]
+verify_jwt = false
+
+[functions.send-brief-email]
+verify_jwt = false

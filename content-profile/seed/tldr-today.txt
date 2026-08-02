@@ -1,0 +1,6 @@
+PLACEHOLDER - replace with today's real TLDR AI issue text before the demo.
+
+Open today's TLDR AI email (or https://tldr.tech/ai), copy the top 1-3 items
+you actually find interesting (headline + the 2-3 sentence summary TLDR
+gives you is enough, you don't need the full linked article), and paste them
+here in place of this placeholder. One issue's worth of content per file.

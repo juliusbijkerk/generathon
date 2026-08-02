@@ -1,0 +1,15 @@
+node_modules/
+dist/
+build/
+.env
+.env.local
+*.local
+
+# video factory output (generated mp4/audio/images, regenerate with npm run video:dry-run)
+video-factory/output/
+
+# supabase local
+.supabase/
+
+# os
+.DS_Store
