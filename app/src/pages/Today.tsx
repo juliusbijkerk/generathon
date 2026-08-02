@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { fetchTodayBrief, subscribeToSaves } from "../lib/api";
 import { isDemoMode } from "../lib/supabaseClient";
 import type { BriefView } from "../lib/types";
-import { AIChat } from "../components/AIChat";
+import { AICharacter } from "../components/AICharacter";
 import { KnowledgeGraph } from "../components/KnowledgeGraph";
 import { ItemCard } from "../components/ItemCard";
 import { CaptureBox } from "../components/CaptureBox";
@@ -50,13 +50,13 @@ export function Today() {
 
       {isDemoMode && (
         <div className="mb-8 rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.06] p-4 text-sm text-emerald-100/80">
-          🤖 <strong>AI-Powered Second Brain</strong> - Chat with your content! Ask questions, explore connections, get help building on ideas. Real version connects to your Instagram, LinkedIn, Telegram & newsletter saves.
+          👤 <strong>Meet Alex - Your Digital Content Co-Founder</strong> - Talk to a real AI character about your saves! Ask questions, explore ideas, get help building. Real version connects to your Instagram, LinkedIn, Telegram & newsletter saves.
         </div>
       )}
 
       {brief && brief.items.length > 0 && (
         <div className="mb-10">
-          <AIChat items={brief.items} userName={brief.display_name} />
+          <AICharacter items={brief.items} userName={brief.display_name} />
         </div>
       )}
 
