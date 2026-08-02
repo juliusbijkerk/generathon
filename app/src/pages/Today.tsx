@@ -49,20 +49,18 @@ export function Today() {
 
       {isDemoMode && (
         <div className="mb-8 rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.06] p-4 text-sm text-emerald-100/80">
-          ✨ <strong>Demo Mode</strong> - This is what your daily brief looks like! Real version connects to Instagram, LinkedIn, Telegram & newsletters.
+          ✨ <strong>Demo Mode</strong> - Sample narrated video below! Real version auto-generates from your Instagram, LinkedIn, Telegram & newsletter saves.
         </div>
       )}
 
-      {!isDemoMode && (
-        <>
-          <div className="mb-10">
-            <VideoPlayer videoUrl={brief?.video_url ?? null} itemCount={brief?.items.length ?? 0} />
-          </div>
+      <div className="mb-10">
+        <VideoPlayer videoUrl={brief?.video_url ?? null} itemCount={brief?.items.length ?? 0} />
+      </div>
 
-          <div className="mb-10">
-            <CaptureBox onCaptured={load} />
-          </div>
-        </>
+      {!isDemoMode && (
+        <div className="mb-10">
+          <CaptureBox onCaptured={load} />
+        </div>
       )}
 
       {error && (

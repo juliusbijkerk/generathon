@@ -9,7 +9,7 @@ import type { BriefView, ProfileView } from "./types";
 export const DEMO_BRIEF: BriefView = {
   date: "2026-08-02",
   display_name: "Julius",
-  video_url: null,
+  video_url: "/demo-brief.mp4",
   skipped_count: 12,
   items: [
     {
