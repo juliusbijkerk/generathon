@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { fetchTodayBrief, subscribeToSaves } from "../lib/api";
 import { isDemoMode } from "../lib/supabaseClient";
 import type { BriefView } from "../lib/types";
-import { VideoPlayer } from "../components/VideoPlayer";
+import { AIChat } from "../components/AIChat";
+import { KnowledgeGraph } from "../components/KnowledgeGraph";
 import { ItemCard } from "../components/ItemCard";
 import { CaptureBox } from "../components/CaptureBox";
 
@@ -49,13 +50,15 @@ export function Today() {
 
       {isDemoMode && (
         <div className="mb-8 rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.06] p-4 text-sm text-emerald-100/80">
-          ✨ <strong>Demo Mode</strong> - Sample narrated video below! Real version auto-generates from your Instagram, LinkedIn, Telegram & newsletter saves.
+          🤖 <strong>AI-Powered Second Brain</strong> - Chat with your content! Ask questions, explore connections, get help building on ideas. Real version connects to your Instagram, LinkedIn, Telegram & newsletter saves.
         </div>
       )}
 
-      <div className="mb-10">
-        <VideoPlayer videoUrl={brief?.video_url ?? null} itemCount={brief?.items.length ?? 0} />
-      </div>
+      {brief && brief.items.length > 0 && (
+        <div className="mb-10">
+          <AIChat items={brief.items} userName={brief.display_name} />
+        </div>
+      )}
 
       {!isDemoMode && (
         <div className="mb-10">
@@ -73,10 +76,19 @@ export function Today() {
         <p className="text-sm text-white/40">Loading...</p>
       ) : (
         <>
-          <div className="grid gap-4">
-            {brief?.items.map((item) => (
-              <ItemCard key={`${item.rank_position}-${item.source_url ?? item.one_line_insight}`} item={item} />
-            ))}
+          {brief && brief.items.length > 0 && (
+            <div className="mb-10">
+              <KnowledgeGraph items={brief.items} />
+            </div>
+          )}
+
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold text-white/80 mb-4">📚 All Items</h2>
+            <div className="grid gap-4">
+              {brief?.items.map((item) => (
+                <ItemCard key={`${item.rank_position}-${item.source_url ?? item.one_line_insight}`} item={item} />
+              ))}
+            </div>
           </div>
 
           {brief && brief.skipped_count > 0 && (
