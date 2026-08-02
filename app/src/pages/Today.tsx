@@ -33,24 +33,37 @@ export function Today() {
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-12 sm:py-16">
-      <header className="mb-10 flex items-baseline justify-between">
-        <div>
-          <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">
-            {brief?.date ?? "today"}
-            {isDemoMode && <span className="ml-2 text-amber-300/80">· demo mode</span>}
-          </p>
-          <h1 className="font-display mt-1 text-4xl font-medium tracking-tight text-white sm:text-[42px]">
-            {brief?.display_name ?? "Your"}'s brief
-          </h1>
+      <header className="mb-10">
+        <div className="flex items-start justify-between mb-6">
+          <div>
+            <p className="text-[11px] uppercase tracking-[0.18em] text-white/40">
+              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
+              {isDemoMode && <span className="ml-2 text-amber-300/80">· demo</span>}
+            </p>
+            <h1 className="font-display mt-1 text-4xl font-medium tracking-tight text-white sm:text-[42px]">
+              Morning Briefing
+            </h1>
+            <p className="mt-2 text-sm text-white/50">
+              {brief?.display_name ?? "Your"} · {brief?.items.length ?? 0} items analyzed
+            </p>
+          </div>
+          <Link to="/profile" className="text-sm text-white/40 transition hover:text-white">
+            Profile →
+          </Link>
         </div>
-        <Link to="/profile" className="text-sm text-white/40 transition hover:text-white">
-          Profile →
-        </Link>
       </header>
 
       {isDemoMode && (
-        <div className="mb-8 rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.06] p-4 text-sm text-emerald-100/80">
-          👤 <strong>Meet Alex - Your Digital Content Co-Founder</strong> - Talk to a real AI character about your saves! Ask questions, explore ideas, get help building. Real version connects to your Instagram, LinkedIn, Telegram & newsletter saves.
+        <div className="mb-8 rounded-2xl border border-blue-400/20 bg-blue-400/[0.06] p-4">
+          <div className="flex items-start gap-3">
+            <div className="text-2xl">🌅</div>
+            <div className="text-sm text-blue-100/90">
+              <strong>Morning Briefing with Alex</strong> - Start your day by chatting with your AI research assistant about the latest in tech. Alex has analyzed your saved content and is ready to discuss, connect ideas, and help you build.
+              <div className="mt-2 text-xs text-blue-100/70">
+                Demo mode: Uses sample tech news. Real version connects to your Instagram, LinkedIn, Telegram & newsletter saves + can integrate with email/calendar.
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
