@@ -1,12 +1,13 @@
 # FOC - Future of Content
 
-A personal daily "content debrief": capture what you save on Instagram,
-LinkedIn, Telegram, and newsletters, classify and rank it against a personal
-content profile, and get the top items back as a narrated vertical video, a
-web page, and an email - instead of a save pile you never revisit.
+Your AI-powered second brain for saved content. Capture what you save on Instagram,
+LinkedIn, Telegram, and newsletters - then **chat with an AI** that helps you explore
+connections, build on ideas, and turn saves into action.
 
-> You don't need to scroll anymore. The good stuff finds you. The bad stuff
-> never reaches you.
+> You don't need to scroll anymore. An AI companion helps you understand, connect,
+> and act on the content that matters.
+
+**NEW: Interactive AI Chat + Knowledge Graph** 🤖
 
 Built solo in ~14 hours for Generathon (Paris, Aug 2026). Full build plan:
 `.cursor/plans/foc_hackathon_build_plan_7d3c446f.plan.md`.
@@ -15,9 +16,11 @@ Built solo in ~14 hours for Generathon (Paris, Aug 2026). Full build plan:
 
 ```
 capture (paste / Telegram)  ->  classify (LLM)  ->  rank (content profile)
-        ->  script + TTS + cards + ffmpeg  ->  CapCut/Higgsfield polish
-        ->  /today web page  +  email
+        ->  AI chat interface  ->  knowledge graph connections
+        ->  explore, build, & act on ideas
 ```
+
+**Original video pipeline still available** for narrated briefs when you want passive consumption.
 
 See the plan file for the full architecture diagram and rationale.
 
