@@ -9,7 +9,7 @@ import type { BriefView, ProfileView } from "./types";
 export const DEMO_BRIEF: BriefView = {
   date: "2026-08-02",
   display_name: "Julius",
-  video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+  video_url: null,
   skipped_count: 12,
   items: [
     {

@@ -48,19 +48,22 @@ export function Today() {
       </header>
 
       {isDemoMode && (
-        <div className="mb-8 rounded-2xl border border-amber-400/20 bg-amber-400/[0.06] p-4 text-sm text-amber-100/80">
-          Running on fixture data. Set VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY in app/.env to
-          go live (see docs/SETUP.md).
+        <div className="mb-8 rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.06] p-4 text-sm text-emerald-100/80">
+          ✨ <strong>Demo Mode</strong> - This is what your daily brief looks like! Real version connects to Instagram, LinkedIn, Telegram & newsletters.
         </div>
       )}
 
-      <div className="mb-10">
-        <VideoPlayer videoUrl={brief?.video_url ?? null} itemCount={brief?.items.length ?? 0} />
-      </div>
+      {!isDemoMode && (
+        <>
+          <div className="mb-10">
+            <VideoPlayer videoUrl={brief?.video_url ?? null} itemCount={brief?.items.length ?? 0} />
+          </div>
 
-      <div className="mb-10">
-        <CaptureBox onCaptured={load} />
-      </div>
+          <div className="mb-10">
+            <CaptureBox onCaptured={load} />
+          </div>
+        </>
+      )}
 
       {error && (
         <div className="mb-8 rounded-2xl border border-red-400/20 bg-red-400/[0.06] p-4 text-sm text-red-200/80">
@@ -72,7 +75,7 @@ export function Today() {
         <p className="text-sm text-white/40">Loading...</p>
       ) : (
         <>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-4">
             {brief?.items.map((item) => (
               <ItemCard key={`${item.rank_position}-${item.source_url ?? item.one_line_insight}`} item={item} />
             ))}

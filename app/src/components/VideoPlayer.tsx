@@ -1,15 +1,8 @@
 export function VideoPlayer({ videoUrl, itemCount }: { videoUrl: string | null; itemCount: number }) {
+  // In demo mode, don't show the video player - it takes up too much space
+  // and distracts from the actual content cards below
   if (!videoUrl) {
-    return (
-      <div className="mx-auto flex aspect-[9/16] w-full max-w-xs items-center justify-center rounded-[28px] border border-dashed border-white/[0.12] bg-white/[0.02]">
-        <p className="px-8 text-center text-sm leading-relaxed text-white/35">
-          No brief video yet.
-          <br />
-          Run <code className="text-white/50">npm run video:dry-run</code> or wire the live
-          pipeline (see docs/SETUP.md).
-        </p>
-      </div>
-    );
+    return null;
   }
 
   return (
