@@ -31,9 +31,3 @@ export function checkFfmpegAvailable(): Promise<boolean> {
     .then(() => true)
     .catch(() => false);
 }
-
-export function ffmpegHasSubtitlesFilter(): Promise<boolean> {
-  return execFileP("ffmpeg", ["-filters"])
-    .then(({ stdout }) => stdout.includes("subtitles"))
-    .catch(() => false);
-}

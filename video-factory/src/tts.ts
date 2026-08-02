@@ -2,9 +2,14 @@
 // OPENAI_API_KEY) this generates silence via ffmpeg's anullsrc, timed from a
 // word-count reading-pace estimate, so downstream card timing and assembly
 // are fully exercised without ever calling a paid API.
+//
+// Two speakers get two distinct OpenAI voices (env-configurable) so the
+// two-host script actually sounds like two people, not one voice reading
+// both parts.
 
 import { writeFile } from "node:fs/promises";
 import { run, ffprobeDurationSeconds } from "./ffmpegUtil.js";
+import type { Speaker } from "./types.js";
 
 const WORDS_PER_SECOND = 2.5; // conversational reading pace estimate
 
@@ -14,15 +19,22 @@ export interface TtsResult {
   synthesized: boolean; // false when this is silence, not real speech
 }
 
+function voiceFor(speaker: Speaker): string {
+  const envVar = speaker === "A" ? "OPENAI_TTS_VOICE_A" : "OPENAI_TTS_VOICE_B";
+  const fallback = speaker === "A" ? "onyx" : "shimmer";
+  return process.env[envVar] ?? fallback;
+}
+
 export async function synthesizeLine(
   text: string,
   outPath: string,
+  speaker: Speaker,
   opts: { dryRun: boolean },
 ): Promise<TtsResult> {
   const apiKey = process.env.OPENAI_API_KEY;
 
   if (!opts.dryRun && apiKey) {
-    const ok = await synthesizeViaOpenAi(text, outPath, apiKey);
+    const ok = await synthesizeViaOpenAi(text, outPath, apiKey, voiceFor(speaker));
     if (ok) {
       const durationSeconds = await ffprobeDurationSeconds(outPath);
       return { path: outPath, durationSeconds, synthesized: true };
@@ -47,10 +59,9 @@ export async function synthesizeLine(
   return { path: outPath, durationSeconds: estimatedSeconds, synthesized: false };
 }
 
-async function synthesizeViaOpenAi(text: string, outPath: string, apiKey: string): Promise<boolean> {
+async function synthesizeViaOpenAi(text: string, outPath: string, apiKey: string, voice: string): Promise<boolean> {
   try {
     const model = process.env.OPENAI_TTS_MODEL ?? "gpt-4o-mini-tts";
-    const voice = process.env.OPENAI_TTS_VOICE ?? "onyx";
     const res = await fetch("https://api.openai.com/v1/audio/speech", {
       method: "POST",
       headers: {

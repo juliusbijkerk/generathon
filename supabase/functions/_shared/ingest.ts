@@ -4,7 +4,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { complete, parseJsonLoose } from "./llm.ts";
-import { fetchMeta } from "./fetchMeta.ts";
+import { fetchMeta, type FetchedMeta } from "./fetchMeta.ts";
 import { scoreClassification } from "./profile.ts";
 import type { ClassifierResult, ContentProfile, IngestInput } from "./types.ts";
 
@@ -63,6 +63,22 @@ Noise rules for reference:
 ${noise}`;
 }
 
+/**
+ * True when there is nothing to classify beyond a bare URL - no caption was
+ * typed, and the metadata fetch didn't get anything either (Instagram/
+ * LinkedIn routinely block it). Sharing a post via the native OS share sheet
+ * produces exactly this: Telegram gets only the raw link, no caption field.
+ * Guessing an intent from zero content is how "7 Claude Code tips from Boris
+ * Cherny" ends up wrongly tagged NOISE - better to say so honestly than to
+ * silently drop a real save.
+ */
+function isUnreadableBareLink(input: IngestInput, meta: FetchedMeta): boolean {
+  if (!input.source_url) return false;
+  if (meta.status === "ok") return false;
+  const text = (input.raw_text ?? "").trim();
+  return text === "" || text === input.source_url.trim();
+}
+
 export async function ingestAndClassify(input: IngestInput) {
   const supabase = getClient();
 
@@ -110,19 +126,38 @@ export async function ingestAndClassify(input: IngestInput) {
     .single();
   if (saveErr || !save) throw new Error(`Failed to insert save: ${saveErr?.message}`);
 
+  const unreadable = isUnreadableBareLink(input, meta);
   const model = Deno.env.get("CLASSIFY_MODEL_LIVE") ?? "gpt-4o-mini";
-  const raw = await complete({
-    model,
-    messages: [
-      { role: "system", content: buildSystemPrompt(profile) },
-      { role: "user", content: contentForClassifier },
-    ],
-    maxTokens: 300,
-    temperature: 0.3,
-    jsonSchema: model.startsWith("gpt-") ? CLASSIFIER_JSON_SCHEMA : undefined,
-  });
 
-  const parsed = parseJsonLoose<ClassifierResult>(raw);
+  let parsed: ClassifierResult;
+  let modelUsed: string;
+  if (unreadable) {
+    // Nothing to reason about - a bare link Instagram/LinkedIn blocked us from
+    // reading, and no caption was typed. Say so honestly instead of guessing
+    // NOISE from zero signal, and skip the LLM call (saves cost + latency).
+    modelUsed = "heuristic-unreadable-link";
+    parsed = {
+      intent: "DISCOVER",
+      tags: ["needs-caption"],
+      one_line_insight: `Saved from ${input.source_name ?? input.source_type}, but ${input.source_type} blocked reading the page - forward it again with a short caption describing what it's about.`,
+      matched_active_project: null,
+      is_noise: false,
+    };
+  } else {
+    modelUsed = model;
+    const raw = await complete({
+      model,
+      messages: [
+        { role: "system", content: buildSystemPrompt(profile) },
+        { role: "user", content: contentForClassifier },
+      ],
+      maxTokens: 300,
+      temperature: 0.3,
+      jsonSchema: model.startsWith("gpt-") ? CLASSIFIER_JSON_SCHEMA : undefined,
+    });
+    parsed = parseJsonLoose<ClassifierResult>(raw);
+  }
+
   const scored = scoreClassification(profile, parsed, input.source_type, contentForClassifier);
 
   const { data: classification, error: classErr } = await supabase
@@ -135,7 +170,7 @@ export async function ingestAndClassify(input: IngestInput) {
       score: scored.score,
       matched_active_project: scored.matched_active_project,
       is_noise: scored.is_noise,
-      model_used: model,
+      model_used: modelUsed,
     })
     .select()
     .single();

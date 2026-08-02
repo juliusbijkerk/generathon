@@ -47,6 +47,16 @@ Deno.serve(async (req: Request) => {
     return json({ ok: true });
   }
 
+  // Bot commands (/start, /help, ...) aren't content - don't waste a save row
+  // or an LLM call classifying them, just greet the user.
+  if (text.trim().startsWith("/")) {
+    await sendTelegramMessage(
+      chatId,
+      "FOC Brief is listening. Share or forward a post here (Instagram/LinkedIn share sheet, or paste a link/text) and I'll tag it for today's brief.\n\nTip: Instagram/LinkedIn often block reading the page directly, so if you share via the share sheet, add a short caption alongside the link so I know what it's about.",
+    );
+    return json({ ok: true });
+  }
+
   const url = extractUrl(text);
   const fromUsername: string | undefined = message?.from?.username;
 

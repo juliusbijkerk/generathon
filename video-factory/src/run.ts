@@ -74,8 +74,8 @@ async function main() {
   console.log("Done.");
   console.log(`  Output:        ${result.finalPath}`);
   console.log(`  Duration:      ${result.totalDurationSeconds.toFixed(1)}s`);
-  console.log(`  Captions:      ${result.captioned ? "burned in" : "NOT burned in (see warning above)"}`);
-  console.log(`  Real voice:    ${result.synthesizedRealVoice ? "yes (OpenAI TTS)" : "no (silence placeholder - dry run)"}`);
+  console.log(`  Motion items:  ${result.itemsWithMotion} (zoompan + staged word-reveal, no drawtext/libass needed)`);
+  console.log(`  Real voice:    ${result.synthesizedRealVoice ? "yes (OpenAI TTS, two voices)" : "no (silence placeholder - dry run)"}`);
   if (dryRun) {
     console.log("");
     console.log("This was a dry run: silent audio, fixture data. Add OPENAI_API_KEY and");

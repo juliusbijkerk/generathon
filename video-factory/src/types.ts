@@ -1,4 +1,5 @@
 export type Intent = "TOOL" | "BUILD" | "MARKET" | "ANCHOR" | "DISCOVER";
+export type Speaker = "A" | "B";
 
 export interface BriefItem {
   rank_position: number;
@@ -22,11 +23,19 @@ export interface Brief {
 export interface ScriptLine {
   rank_position: number;
   intent: Intent;
+  speaker: Speaker;
   text: string;
 }
 
+export interface ScriptBeat {
+  speaker: Speaker;
+  text: string;
+}
+
+/** Two-host conversational script, NotebookLM-Audio-Overview style: a beat is
+ * always attributed to a speaker so TTS can alternate voices. */
 export interface Script {
-  opener: string;
+  opener: ScriptBeat;
   lines: ScriptLine[];
-  closer: string;
+  closer: ScriptBeat;
 }

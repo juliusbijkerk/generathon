@@ -44,13 +44,13 @@ export function CaptureBox({ onCaptured }: { onCaptured?: () => void }) {
   }
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-      <p className="mb-3 text-sm font-medium text-gray-300">Capture something new</p>
+    <div className="rounded-[22px] border border-white/[0.08] bg-white/[0.025] p-5">
+      <p className="mb-3 text-sm font-medium text-white/60">Capture something new</p>
       <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:flex-row">
         <select
           value={sourceType}
           onChange={(e) => setSourceType(e.target.value as CaptureInput["source_type"])}
-          className="rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-gray-200"
+          className="rounded-xl border border-white/[0.08] bg-black/30 px-3 py-2.5 text-sm text-white/80"
         >
           {SOURCE_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
@@ -62,26 +62,26 @@ export function CaptureBox({ onCaptured }: { onCaptured?: () => void }) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Paste a URL or the post text..."
-          className="flex-1 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-gray-200 placeholder:text-gray-600"
+          className="flex-1 rounded-xl border border-white/[0.08] bg-black/30 px-3 py-2.5 text-sm text-white/80 placeholder:text-white/25"
         />
         <button
           type="submit"
           disabled={loading}
-          className="rounded-lg bg-white px-4 py-2 text-sm font-semibold text-black disabled:opacity-50"
+          className="rounded-xl bg-[var(--paper)] px-5 py-2.5 text-sm font-semibold text-black transition hover:opacity-90 disabled:opacity-50"
         >
           {loading ? "Classifying..." : "Capture"}
         </button>
       </form>
 
-      {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
+      {error && <p className="mt-3 text-sm text-red-300/90">{error}</p>}
 
       {result && (
-        <div className="mt-3 rounded-lg border border-white/10 bg-black/30 p-3">
-          <div className="mb-1 flex items-center gap-2">
+        <div className="mt-3 rounded-xl border border-white/[0.08] bg-black/20 p-3.5">
+          <div className="mb-1.5 flex items-center gap-2">
             <TagPill intent={result.intent as Intent} />
-            {result.is_noise && <span className="text-xs text-gray-500">(would be filtered as noise)</span>}
+            {result.is_noise && <span className="text-xs text-white/35">(would be filtered as noise)</span>}
           </div>
-          <p className="text-sm text-gray-200">{result.one_line_insight}</p>
+          <p className="text-sm text-white/80">{result.one_line_insight}</p>
         </div>
       )}
     </div>
