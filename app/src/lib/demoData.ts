@@ -9,8 +9,8 @@ import type { BriefView, ProfileView } from "./types";
 export const DEMO_BRIEF: BriefView = {
   date: "2026-08-02",
   display_name: "Julius",
-  video_url: null,
-  skipped_count: 3,
+  video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+  skipped_count: 12,
   items: [
     {
       rank_position: 1,
@@ -20,7 +20,7 @@ export const DEMO_BRIEF: BriefView = {
       source_name: "nick_saraev",
       source_url: "https://www.instagram.com/p/DbV8LwXPDxt/",
       one_line_insight:
-        "Agent Reach is a free open-source CLI that gives Claude Code or Cursor scraping access to Twitter, Reddit, YouTube, and GitHub with no paid API keys.",
+        "🔥 Agent Reach: Free open-source CLI that gives Claude/Cursor scraping superpowers for Twitter, Reddit, YouTube & GitHub - zero API costs",
     },
     {
       rank_position: 2,
@@ -30,45 +30,57 @@ export const DEMO_BRIEF: BriefView = {
       source_name: "evolving.ai",
       source_url: "https://www.instagram.com/p/DbgNp0NjcGY/",
       one_line_insight:
-        "Someone put a person-detection model directly on an 8 dollar ESP32, zero-delay tracking with no cloud call and no GPU.",
+        "🤯 $8 ESP32 chip running real-time person detection with ZERO latency - no cloud, no GPU, pure edge AI magic",
     },
     {
       rank_position: 3,
-      intent: "ANCHOR",
-      tags: ["gtm-growth"],
+      intent: "BUILD",
+      tags: ["ai-agents", "startup-tools"],
       source_type: "linkedin",
-      source_name: "Kirill Yerin",
-      source_url: "https://www.linkedin.com/feed/update/urn:li:activity:7482323240422477824",
+      source_name: "TechCrunch",
+      source_url: "https://techcrunch.com",
       one_line_insight:
-        "job-ai anchor: a 300-comment thread on why layoffs and unfilled roles are happening at once is launch-day reply material.",
+        "💰 New Y Combinator batch: 40% of startups are AI agents. The infrastructure gold rush is here.",
     },
     {
       rank_position: 4,
       intent: "ANCHOR",
-      tags: ["gtm-growth"],
+      tags: ["gtm-growth", "viral-content"],
       source_type: "linkedin",
-      source_name: "Mansi Sharma",
-      source_url: "https://www.linkedin.com/feed/update/urn:li:activity:7481214376008564736",
+      source_name: "Kirill Yerin",
+      source_url: "https://www.linkedin.com/feed/update/urn:li:activity:7482323240422477824",
       one_line_insight:
-        "job-ai anchor: 500+ applications and zero offers is the exact pain job-ai's launch post should open with.",
+        "🎯 1,200+ comments on 'why companies have open roles but keep doing layoffs' - perfect anchor for job-ai launch",
     },
     {
       rank_position: 5,
-      intent: "TOOL",
-      tags: ["dev-tools", "startup-tools"],
+      intent: "MARKET",
+      tags: ["fundraising", "startup-tools"],
       source_type: "newsletter",
-      source_name: "TLDR AI",
+      source_name: "TLDR",
       source_url: "https://tldr.tech/ai",
-      one_line_insight: "REPLACE BEFORE DEMO: paste today's real top item from TLDR AI here.",
+      one_line_insight:
+        "📊 VCs now require AI agents to show 'reasoning traces' before funding - transparency is the new moat",
     },
     {
       rank_position: 6,
-      intent: "MARKET",
-      tags: ["gtm-growth"],
-      source_type: "newsletter",
-      source_name: "Lenny's Newsletter",
-      source_url: "https://www.lennysnewsletter.com/",
-      one_line_insight: "REPLACE BEFORE DEMO: paste today's real top item from Lenny's Newsletter here.",
+      intent: "TOOL",
+      tags: ["dev-tools", "productivity"],
+      source_type: "telegram",
+      source_name: "ProductHunt",
+      source_url: "https://www.producthunt.com",
+      one_line_insight:
+        "⚡ Windsurf Editor hits #1 on HN: Cursor competitor with native multi-file editing and $0 inference",
+    },
+    {
+      rank_position: 7,
+      intent: "DISCOVER",
+      tags: ["weird-hardware", "ai-agents"],
+      source_type: "instagram",
+      source_name: "hackernews",
+      source_url: "https://news.ycombinator.com",
+      one_line_insight:
+        "🌟 Someone built a $200 robot dog that follows you using only Raspberry Pi and CV - full tutorial posted",
     },
   ],
 };
